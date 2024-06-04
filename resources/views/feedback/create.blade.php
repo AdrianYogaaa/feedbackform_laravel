@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>Feedback</title>
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <style>
     body {
       font-family: Verdana, Geneva, Tahoma, sans-serif;
@@ -24,7 +25,7 @@
       text-align: center;
     }
 
-    input[type="text"], input[type="email"], textarea {
+    input[type="text"], textarea {
       width: 100%;
       padding: 10px;
       margin-bottom: 15px;
@@ -46,21 +47,15 @@
 <body>
   <div class="feedback-form">
     <h2>Feedback Form</h2>
-    @if(session('success'))
-      <div>
-        {{ session('success') }}
-      </div>
-    @endif
-    <form action="/feedback" method="POST">
-      @csrf
+    <form id="feedbackForm">
       <label for="name">Name:</label>
       <input type="text" id="name" name="name" placeholder="Enter Name" required>
 
       <label for="email">Email:</label>
-      <input type="email" id="email" name="email" placeholder="Enter email" required>
+      <input type="text" id="email" name="email" placeholder="Enter email" required>
 
       <label for="project">Project Name:</label>
-      <input type="text" id="project" name="project" placeholder="Enter project" required>
+      <input type="text" id="project" name="project" placeholder="Enter project name" required>
 
       <label for="message">Message:</label>
       <textarea id="message" name="message" rows="5" placeholder="Enter message" required></textarea>
@@ -68,5 +63,37 @@
       <button type="submit">Submit</button>
     </form>
   </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      document.getElementById('feedbackForm').addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent form submission
+
+        let formData = new FormData(this);
+
+        fetch('{{ route('feedback.store') }}', {
+          method: 'POST',
+          headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            'Accept': 'application/json',
+          },
+          body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert(data.message);
+            window.location.href = '/feedback';
+          } else {
+            alert('There was an error submitting your feedback.');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('There was an error submitting your feedback.');
+        });
+      });
+    });
+  </script>
 </body>
 </html>

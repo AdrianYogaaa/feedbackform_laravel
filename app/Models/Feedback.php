@@ -11,5 +11,5 @@ class Feedback extends Model
 
     protected $fillable = ['name', 'email', 'project', 'message'];
 
-    protected $table = 'feedbackform';  // Sesuaikan nama tabel
+    protected $table = 'feedbackform';
 }

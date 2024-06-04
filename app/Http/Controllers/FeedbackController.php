@@ -28,6 +28,6 @@ class FeedbackController extends Controller
             'message' => $request->message,
         ]);
 
-        return redirect()->back()->with('success', 'Thank you for your feedback!');
+        return response()->json(['success' => true, 'message' => 'Feedback submitted successfully!']);
     }
 }

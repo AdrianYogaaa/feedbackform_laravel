@@ -8,13 +8,13 @@ return new class extends Migration {
     /**
      * Run the migrations.
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('feedbackform', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('email');
-            $table->string('project');  // Sesuaikan dengan field yang benar
+            $table->string('project');
             $table->text('message');
             $table->timestamps();
         });
@@ -23,10 +23,8 @@ return new class extends Migration {
     /**
      * Reverse the migrations.
      */
-
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('feedbackform');
     }
- 
 };
